@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  color-scheme: light;
+  --page-background: #ffffff;
+  --page-foreground: #0f172a;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page-background: #070a0f;
+  --page-foreground: #f8fafc;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--page-background);
+  color: var(--page-foreground);
+  font-family: "Share Tech", sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+::selection {
+  background-color: #bfdbfe;
+  color: #0f172a;
+}
+
+:root[data-theme="dark"] ::selection {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+@keyframes cart-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-0.75rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cart-toast-enter {
+  animation: cart-toast-enter 220ms ease-out both;
+}
+
+@keyframes product-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.product-marquee-track {
+  animation: product-marquee-scroll 68s linear infinite normal;
+}
+
+.product-marquee:hover .product-marquee-track,
+.product-marquee:focus-within .product-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (hover: none) {
+  .product-size-options {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-toast-enter {
+    animation: none;
+  }
+
+  .product-marquee-viewport {
+    overflow-x: auto;
+  }
+
+  .product-marquee-track {
+    animation: none;
+    transform: none;
+  }
+
+  .product-marquee-group[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .receipt-actions {
+    display: none !important;
+  }
+
+  body,
+  .receipt-paper {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .receipt-paper {
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .receipt-paper * {
+    color: #000 !important;
+  }
+}

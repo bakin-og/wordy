@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Apply the saved/system theme before React renders to avoid a theme flash.
+      try {
+        const savedTheme = localStorage.getItem("wordy-theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.dataset.theme =
+          savedTheme === "light" || savedTheme === "dark"
+            ? savedTheme
+            : prefersDark
+              ? "dark"
+              : "light";
+      } catch (error) {
+        console.warn("Unable to load the saved theme preference.", error);
+        document.documentElement.dataset.theme = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches
+          ? "dark"
+          : "light";
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap"
+      rel="stylesheet"
+    />
+    <meta
+      name="description"
+      content="Discover expressive Wordy apparel, footwear, and accessories."
+    />
+    <meta name="theme-color" content="#0f172a" />
+    <meta property="og:title" content="Wordy | Wear your words" />
+    <meta
+      property="og:description"
+      content="Creative apparel and accessories made for everyday expression."
+    />
+    <meta property="og:type" content="website" />
+    <title>Wordy | Wear your words</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

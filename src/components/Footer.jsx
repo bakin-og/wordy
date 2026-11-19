@@ -129,7 +129,6 @@ const Footer = () => {
       <div className="border-t border-slate-200 dark:border-slate-800">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8 dark:text-slate-400">
           <p>© {year} Wordy. All rights reserved.</p>
-          <p>Demo store · checkout does not collect payment.</p>
         </div>
       </div>
     </footer>

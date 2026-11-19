@@ -196,20 +196,23 @@ const Accessories = () => {
           aria-label={`${activeCategory} products`}
           className="mt-4 grid grid-cols-1 gap-x-4 gap-y-5 min-[380px]:grid-cols-2 sm:mt-6 sm:gap-x-5 sm:gap-y-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6"
         >
-          {visibleProducts.map((product) => {
+          {visibleProducts.map((product, index) => {
             // Per-product state lets several items be configured independently.
             const selectedSize = selectedSizes[product.id];
             const availableSizes = product.sizes ?? [];
 
             return (
               <li key={product.id} className="min-w-0">
-                <article className="group flex h-full min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-900">
+                <article
+                  style={{animationDelay: `${Math.min(index, 8) * 45}ms`}}
+                  className="product-card group flex h-full min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm dark:border-slate-700 dark:bg-slate-900"
+                >
                   <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-100 p-4 transition-colors duration-300 group-hover:bg-slate-200 sm:p-5 dark:bg-slate-800 dark:group-hover:bg-slate-700">
                     <img
                       src={product.image}
                       alt={product.name}
                       loading="lazy"
-                      className="h-full w-full object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-[1.04]"
+                      className="product-card-image h-full w-full object-contain drop-shadow-sm"
                     />
                     {product.tag && (
                       <span className="absolute left-2 top-2 rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-800 shadow-sm sm:left-3 sm:top-3 sm:text-xs dark:bg-slate-700 dark:text-white">

@@ -21,8 +21,13 @@ const SearchResults = () => {
 
   const results = useMemo(() => {
     // Match every search term across useful product fields.
-    if (!normalizedQuery) {
+    if (!query) {
       return catalogProducts.slice(0, 12);
+    }
+
+    // A non-empty query made only of punctuation should not show unrelated items.
+    if (!normalizedQuery) {
+      return [];
     }
 
     const queryTerms = normalizedQuery.split(" ");
@@ -40,16 +45,16 @@ const SearchResults = () => {
 
       return queryTerms.every((term) => searchableText.includes(term));
     });
-  }, [normalizedQuery]);
+  }, [normalizedQuery, query]);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 pb-8 pt-5 sm:px-6 sm:pb-10 sm:pt-7 lg:px-8">
       <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+        <div className="min-w-0">
           <p className="mb-2 text-sm font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             Search results
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="break-words text-3xl font-semibold tracking-tight text-slate-900 [overflow-wrap:anywhere] dark:text-white">
             {query ? `Results for “${query}”` : "Browse the collection"}
           </h1>
         </div>
@@ -59,12 +64,14 @@ const SearchResults = () => {
       </div>
 
       {results.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center dark:border-slate-700 dark:bg-slate-900/80">
+        <div className="min-w-0 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center sm:p-8 dark:border-slate-700 dark:bg-slate-900/80">
           <p className="text-lg font-medium text-slate-800 dark:text-slate-100">
             No items matched your search.
           </p>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-            Try another keyword such as “hat,” “bag,” or “sneaker.”
+          <p className="mt-2 break-words text-sm text-slate-600 [overflow-wrap:anywhere] dark:text-slate-300">
+            {query
+              ? `We couldn't find a product matching “${query}”. Try another keyword such as “hat,” “bag,” or “sneaker.”`
+              : "Try another keyword such as “hat,” “bag,” or “sneaker.”"}
           </p>
           <Link
             to="/shopall"
@@ -75,7 +82,7 @@ const SearchResults = () => {
         </div>
       ) : (
         <ul className="grid grid-cols-1 gap-x-4 gap-y-5 min-[380px]:grid-cols-2 sm:gap-x-5 sm:gap-y-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-6">
-          {results.map((product) => {
+          {results.map((product, index) => {
             const availableSizes = (product.sizes ?? []).filter(Boolean);
             const selectedSize = selectedSizes[product.id] ?? null;
             const isSoldOut =
@@ -83,13 +90,16 @@ const SearchResults = () => {
 
             return (
               <li key={product.id} className="min-w-0">
-                <article className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900">
+                <article
+                  style={{animationDelay: `${Math.min(index, 8) * 45}ms`}}
+                  className="product-card group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm dark:border-slate-700 dark:bg-slate-900"
+                >
                   <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-100 p-3 transition-colors group-hover:bg-slate-200 dark:bg-slate-800 dark:group-hover:bg-slate-700">
                     <img
                       src={product.image}
                       alt={product.name}
                       loading="lazy"
-                      className="h-full w-full object-contain"
+                      className="product-card-image h-full w-full object-contain"
                     />
                     {product.tag && (
                       <span

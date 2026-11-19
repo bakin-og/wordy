@@ -48,18 +48,22 @@ const Apparel = () => {
         </h1>
 
         <ul className="mt-8 grid grid-cols-1 gap-x-3 gap-y-7 text-left min-[380px]:grid-cols-2 sm:mt-10 sm:gap-x-5 sm:gap-y-9 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
-          {seasonProducts.map((product) => (
-            <li key={product.name} className="min-w-0">
+          {seasonProducts.map((product, index) => (
+            <li
+              key={product.name}
+              className="min-w-0"
+            >
               <Link
                 to="/shopall"
-                className="group block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+                className="product-card group block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+                style={{animationDelay: `${Math.min(index, 8) * 45}ms`}}
               >
                 <div className="aspect-square overflow-hidden rounded-lg bg-slate-100 p-3 sm:rounded-xl sm:p-5 dark:bg-slate-800">
                   <img
                     src={product.image}
                     alt={product.name}
                     loading="lazy"
-                    className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="product-card-image h-full w-full object-contain"
                   />
                 </div>
                 <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">

@@ -112,7 +112,10 @@ const FootwearCollection = () => {
               key={product.id}
               className={`min-w-0 transition-transform duration-500 ${staggerClass}`}
             >
-              <article className="group flex h-full min-w-0 flex-col rounded-[1.75rem] border border-slate-200 bg-white p-2.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl dark:border-slate-700 dark:bg-slate-900 sm:rounded-[2rem] sm:p-3">
+              <article
+                style={{animationDelay: `${Math.min(index, 8) * 45}ms`}}
+                className="product-card group flex h-full min-w-0 flex-col rounded-[1.75rem] border border-slate-200 bg-white p-2.5 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:rounded-[2rem] sm:p-3"
+              >
                 <div
                   className={`relative aspect-[1.12] overflow-hidden rounded-[1.35rem] p-4 sm:rounded-[1.6rem] sm:p-5 ${productPanels[index % productPanels.length]}`}
                 >
@@ -124,7 +127,7 @@ const FootwearCollection = () => {
                     src={product.image}
                     alt={product.name}
                     loading="lazy"
-                    className="relative z-10 h-full w-full object-contain drop-shadow-lg transition-transform duration-500 ease-out group-hover:scale-105"
+                    className="product-card-image relative z-10 h-full w-full object-contain drop-shadow-lg"
                   />
                   {product.tag && (
                     <span className="absolute left-3 top-3 z-20 rounded-full border border-white/70 bg-white/90 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-800 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/85 dark:text-slate-100">

@@ -169,14 +169,17 @@ const Shopall = ({season = null, category = null, productId = null}) => {
           }
           className="scroll-mt-36 grid grid-cols-1 gap-x-4 gap-y-5 min-[380px]:grid-cols-2 sm:gap-x-5 sm:gap-y-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-6"
         >
-          {visibleProducts.map((product) => {
+          {visibleProducts.map((product, index) => {
           const availableSizes = (product.sizes ?? []).filter(Boolean);
           const selectedSize = selectedSizes[product.id];
           const isSoldOut = product.tag?.toLowerCase() === "soldout";
 
           return (
             <li key={product.id} className="min-w-0">
-              <article className="group flex h-full min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-900">
+              <article
+                style={{animationDelay: `${Math.min(index, 8) * 45}ms`}}
+                className="product-card group flex h-full min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm dark:border-slate-700 dark:bg-slate-900"
+              >
                 <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-100 p-3 transition-colors duration-300 group-hover:bg-slate-200 sm:p-4 dark:bg-slate-800 dark:group-hover:bg-slate-700">
                   <div
                     aria-hidden="true"
@@ -186,7 +189,7 @@ const Shopall = ({season = null, category = null, productId = null}) => {
                     src={product.image}
                     alt={product.name}
                     loading="lazy"
-                    className="relative z-10 h-full w-full object-contain drop-shadow-sm transition-transform duration-300 ease-out group-hover:scale-[1.04]"
+                    className="product-card-image relative z-10 h-full w-full object-contain drop-shadow-sm"
                   />
                   {product.tag && (
                     <span

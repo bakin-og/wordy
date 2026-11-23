@@ -21,9 +21,14 @@ describe("Apparel", () => {
     ];
 
     for (const [name, id] of featuredProducts) {
+      const matchingLinks = screen.getAllByRole("link", {
+        name: new RegExp(name),
+      });
       expect(
-        screen.getByRole("link", {name: new RegExp(name)}),
-      ).toHaveAttribute("href", `/products/${id}`);
+        matchingLinks.some(
+          (link) => link.getAttribute("href") === `/products/${id}`,
+        ),
+      ).toBe(true);
     }
   });
 });

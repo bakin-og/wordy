@@ -48,7 +48,10 @@ const readOrder = () => {
     typeof order.date === "string" &&
     typeof order.total === "number" &&
     Number.isFinite(order.total) &&
-    Array.isArray(order.items)
+    Array.isArray(order.items) &&
+    order.payment &&
+    typeof order.payment.method === "string" &&
+    typeof order.payment.status === "string"
     ? {...order, items: order.items.filter(isValidCartItem)}
     : null;
 };
@@ -133,7 +136,7 @@ const CartProvider = ({children}) => {
     setItems([]);
   };
 
-  const completeCheckout = () => {
+  const completeCheckout = (payment = {method: "delivery", status: "demo"}) => {
     if (items.length === 0) {
       return null;
     }
@@ -144,6 +147,11 @@ const CartProvider = ({children}) => {
       date: new Date().toISOString(),
       items: items.map((item) => ({...item})),
       total: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      payment: {
+        method: payment.method,
+        status: "demo",
+        label: payment.label ?? "Demo payment",
+      },
     };
 
     setLastOrder(order);

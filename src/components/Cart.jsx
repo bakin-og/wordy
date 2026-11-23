@@ -1,6 +1,11 @@
+import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useCart} from "./CartContext";
-import {formatPrice} from "../cartUtils";
+import {
+  formatPrice,
+  PAYMENT_METHODS,
+  validateDemoCard,
+} from "../cartUtils";
 
 const Cart = () => {
   const {
@@ -12,12 +17,42 @@ const Cart = () => {
     completeCheckout,
   } = useCart();
   const navigate = useNavigate();
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentErrors, setPaymentErrors] = useState({});
+  const [card, setCard] = useState({
+    name: "",
+    number: "",
+    expiry: "",
+    cvc: "",
+  });
 
-  const handleCheckout = () => {
-    // A successful demo checkout creates an order snapshot and opens the receipt.
-    const order = completeCheckout();
-    if (order) {
-      navigate("/receipt");
+  const handleCheckout = async () => {
+    if (isProcessing) {
+      return;
+    }
+
+    const errors =
+      paymentMethod === "card" ? validateDemoCard(card) : {};
+    setPaymentErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      // Simulate a hosted payment-provider handoff only; no data is transmitted.
+      await new Promise((resolve) => window.setTimeout(resolve, 700));
+      const order = completeCheckout({
+        method: paymentMethod,
+        label: PAYMENT_METHODS[paymentMethod].label,
+      });
+      if (order) {
+        setCard({name: "", number: "", expiry: "", cvc: ""});
+        navigate("/receipt");
+      }
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -141,15 +176,120 @@ const Cart = () => {
               <span>Total</span>
               <span>{formatPrice(total)}</span>
             </div>
+
+            <fieldset className="mt-5">
+              <legend className="text-sm font-semibold text-slate-900 dark:text-white">
+                Payment method
+              </legend>
+              <div className="mt-2 space-y-2">
+                {Object.entries(PAYMENT_METHODS).map(([value, method]) => (
+                  <label
+                    key={value}
+                    className={`flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border px-3 text-sm ${
+                      paymentMethod === value
+                        ? "border-blue-600 bg-blue-50 text-slate-900 dark:border-blue-400 dark:bg-blue-950/40 dark:text-white"
+                        : "border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="payment-method"
+                      value={value}
+                      checked={paymentMethod === value}
+                      onChange={() => {
+                        setPaymentMethod(value);
+                        setPaymentErrors({});
+                      }}
+                      className="h-4 w-4 accent-blue-600"
+                    />
+                    {method.label}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            {paymentMethod === "card" && (
+              <div className="mt-4 grid gap-3">
+                <div>
+                  <label htmlFor="card-name" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Cardholder name
+                  </label>
+                  <input
+                    id="card-name"
+                    value={card.name}
+                    onChange={(event) => setCard((current) => ({...current, name: event.target.value}))}
+                    autoComplete="off"
+                    placeholder="Name on card"
+                    className="mt-1 h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-900 dark:focus:ring-blue-900/40"
+                  />
+                  {paymentErrors.name && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{paymentErrors.name}</p>}
+                </div>
+                <div>
+                  <label htmlFor="card-number" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Demo card number
+                  </label>
+                  <input
+                    id="card-number"
+                    inputMode="numeric"
+                    value={card.number}
+                    onChange={(event) => setCard((current) => ({...current, number: event.target.value.replace(/[^\d ]/g, "").slice(0, 19)}))}
+                    autoComplete="off"
+                    placeholder="4242 4242 4242 4242"
+                    className="mt-1 h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-900 dark:focus:ring-blue-900/40"
+                  />
+                  {paymentErrors.number && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{paymentErrors.number}</p>}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="card-expiry" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Expiry
+                    </label>
+                    <input
+                      id="card-expiry"
+                      value={card.expiry}
+                      onChange={(event) => setCard((current) => ({...current, expiry: event.target.value.slice(0, 5)}))}
+                      autoComplete="off"
+                      placeholder="MM/YY"
+                      className="mt-1 h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-900 dark:focus:ring-blue-900/40"
+                    />
+                    {paymentErrors.expiry && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{paymentErrors.expiry}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="card-cvc" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      CVC
+                    </label>
+                    <input
+                      id="card-cvc"
+                      inputMode="numeric"
+                      value={card.cvc}
+                      onChange={(event) => setCard((current) => ({...current, cvc: event.target.value.replace(/\D/g, "").slice(0, 4)}))}
+                      autoComplete="off"
+                      placeholder="123"
+                      className="mt-1 h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-900 dark:focus:ring-blue-900/40"
+                    />
+                    {paymentErrors.cvc && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{paymentErrors.cvc}</p>}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {paymentMethod !== "card" && (
+              <p className="mt-4 rounded-lg bg-white p-3 text-xs leading-5 text-slate-600 dark:bg-slate-900 dark:text-slate-300">
+                {paymentMethod === "transfer"
+                  ? "This demo records a simulated bank transfer. No transfer instructions or money movement are involved."
+                  : "This demo records a pay-on-delivery order. No delivery or payment will be arranged."}
+              </p>
+            )}
             <p className="mt-3 text-xs leading-5 text-slate-500 dark:text-slate-400">
-              Demo checkout only. No payment will be collected.
+              Demo checkout only. Card details stay in memory and are never stored or transmitted.
             </p>
             <button
               type="button"
               onClick={handleCheckout}
+              disabled={isProcessing}
               className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
             >
-              Complete checkout
+              {isProcessing ? "Processing demo..." : "Complete demo checkout"}
             </button>
           </aside>
         </div>
@@ -193,6 +333,9 @@ const Receipt = () => {
           <p className="mt-3 wrap-break-word text-sm text-slate-500 dark:text-slate-400">
             Order {lastOrder.number} ·{" "}
             {new Date(lastOrder.date).toLocaleString()}
+          </p>
+          <p className="mt-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+            {lastOrder.payment?.label ?? "Demo payment"} · Demo, no charge made
           </p>
         </div>
 

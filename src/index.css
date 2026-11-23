@@ -15,6 +15,8 @@
 }
 
 body {
+  position: relative;
+  isolation: isolate;
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
@@ -24,6 +26,99 @@ body {
   font-weight: normal;
   font-style: normal;
   transition: background-color 200ms ease, color 200ms ease;
+}
+
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(42rem 34rem at 8% 12%, rgb(191 219 254 / 38%), transparent 72%),
+    radial-gradient(36rem 30rem at 92% 38%, rgb(253 230 138 / 19%), transparent 72%),
+    radial-gradient(42rem 34rem at 48% 100%, rgb(196 181 253 / 18%), transparent 74%);
+  content: "";
+  pointer-events: none;
+  animation: ambient-drift 32s ease-in-out infinite alternate;
+}
+
+:root[data-theme="dark"] body::before {
+  background:
+    radial-gradient(42rem 34rem at 8% 12%, rgb(30 64 175 / 20%), transparent 72%),
+    radial-gradient(36rem 30rem at 92% 38%, rgb(180 83 9 / 12%), transparent 72%),
+    radial-gradient(42rem 34rem at 48% 100%, rgb(91 33 182 / 17%), transparent 74%);
+}
+
+@keyframes ambient-drift {
+  from {
+    transform: translate3d(-1%, -0.5%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(1%, 0.5%, 0) scale(1.03);
+  }
+}
+
+@keyframes brand-mark-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  50% {
+    transform: translate3d(0, -2px, 0) rotate(-3deg);
+  }
+}
+
+.brand-mark {
+  animation: brand-mark-float 5s ease-in-out infinite;
+}
+
+@keyframes apparel-image-float {
+  0%,
+  100% {
+    transform: scale(1.035) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.07) translate3d(-0.4%, 0.25%, 0);
+  }
+}
+
+@keyframes apparel-light-sweep {
+  0%,
+  18% {
+    transform: translate3d(-140%, 0, 0) rotate(16deg);
+  }
+  68%,
+  100% {
+    transform: translate3d(140%, 0, 0) rotate(16deg);
+  }
+}
+
+.apparel-hero-image {
+  animation: apparel-image-float 22s ease-in-out infinite;
+}
+
+.apparel-hero-frame::after {
+  position: absolute;
+  z-index: 1;
+  inset: -35%;
+  background: linear-gradient(
+    112deg,
+    transparent 40%,
+    rgb(255 255 255 / 17%) 50%,
+    transparent 60%
+  );
+  content: "";
+  pointer-events: none;
+  animation: apparel-light-sweep 11s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  body::before {
+    animation-duration: 40s;
+  }
+
+  .apparel-hero-image {
+    animation-duration: 28s;
+  }
 }
 
 ::selection {
@@ -115,6 +210,13 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  body::before,
+  .brand-mark,
+  .apparel-hero-image,
+  .apparel-hero-frame::after {
+    animation: none;
+  }
+
   .cart-toast-enter {
     animation: none;
   }

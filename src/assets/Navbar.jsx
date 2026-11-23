@@ -45,7 +45,7 @@ const Navbar = () => {
             to="/apparel"
             className="col-start-1 row-start-1 group flex min-w-0 items-center gap-2 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-lg font-bold tracking-tight text-white transition-transform duration-200 group-hover:-rotate-3 group-hover:scale-105 dark:bg-white dark:text-slate-900">
+            <span className="brand-mark flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-lg font-bold tracking-tight text-white transition-transform duration-200 group-hover:-rotate-3 group-hover:scale-105 dark:bg-white dark:text-slate-900">
               W
             </span>
             <span>

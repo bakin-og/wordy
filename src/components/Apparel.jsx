@@ -26,12 +26,14 @@ const Apparel = () => {
   return (
     <main className="mx-auto w-full max-w-7xl px-4 pb-12 pt-5 sm:px-6 sm:pb-16 sm:pt-8 lg:px-8">
       {/* Primary campaign image for the latest Wordy collection. */}
-      <img
-        src={hero}
-        alt="Artists wearing pieces from the latest Wordy collection"
-        fetchPriority="high"
-        className="aspect-4/3 w-full rounded-xl object-cover sm:aspect-16/8 sm:rounded-2xl lg:aspect-16/7"
-      />
+      <div className="apparel-hero-frame relative isolate aspect-4/3 w-full overflow-hidden rounded-xl sm:aspect-16/8 sm:rounded-2xl lg:aspect-16/7">
+        <img
+          src={hero}
+          alt="Artists wearing pieces from the latest Wordy collection"
+          fetchPriority="high"
+          className="apparel-hero-image absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
 
       <section
         aria-labelledby="season-heading"

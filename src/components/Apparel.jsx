@@ -14,12 +14,12 @@ import sneaker from "../images/sneaker2.webp";
 import ProductMarquee from "./ProductMarquee";
 
 const seasonProducts = [
-  {name: "Self Portrait Tee", price: "₦42,900", image: woman},
-  {name: "Hidden Layers Tote", price: "₦92,900", image: bag},
-  {name: "Toolbox Tee", price: "₦57,200", image: shirt},
-  {name: "Tomato Tee", price: "₦85,800", image: hoodie},
-  {name: "Low Res Socks", price: "₦22,900", image: socks},
-  {name: "Self Portrait Mug", price: "₦42,900", image: mug},
+  {id: 5, name: "Self Portrait Tee", price: "₦42,900", image: woman},
+  {id: 2, name: "Hidden Layers Tote", price: "₦92,900", image: bag},
+  {id: 1, name: "Toolbox Tee", price: "₦57,200", image: shirt},
+  {id: 6, name: "Tomato Tee", price: "₦85,800", image: hoodie},
+  {id: 10, name: "Low Res Socks", price: "₦22,900", image: socks},
+  {id: 9, name: "Self Portrait Mug", price: "₦42,900", image: mug},
 ];
 
 const Apparel = () => {
@@ -54,7 +54,7 @@ const Apparel = () => {
               className="min-w-0"
             >
               <Link
-                to="/shopall"
+                to={`/products/${product.id}`}
                 className="product-card group block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
                 style={{animationDelay: `${Math.min(index, 8) * 45}ms`}}
               >
